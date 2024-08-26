@@ -49,6 +49,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
 
   return (
     <Form className="text-center w-75" onSubmit={onSubmit}>
+      <h1 className='mb-5'>Create Notes</h1>
       <Form.Group className="mb-3" controlId="formBasicTitle">
         <Form.Label className="text-center">Title</Form.Label>
         <Form.Control
@@ -77,6 +78,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
       <Button variant="primary" className="mt-3" type="submit">
         Create
       </Button>
+      <hr className='my-4 ' />
     </Form>
   );
 }

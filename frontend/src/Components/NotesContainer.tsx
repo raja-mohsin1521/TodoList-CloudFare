@@ -26,6 +26,7 @@ function NotesContainer() {
 
   return (
     <div>
+    <h1 className="text-center">Notes</h1>
       {error && <p>Error: {error}</p>}
       {sortedData.length === 0 && !error && <p className="text-center mt-4">No notes available.</p>}
       {sortedData.length > 0 && (
