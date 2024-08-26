@@ -1,8 +1,8 @@
-import { useState, ChangeEvent } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { useCreate } from "../Hooks/useCreate";
-import { useRead } from "../Hooks/useRead"; 
+import { useState, ChangeEvent } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import { useCreate } from '../Hooks/useCreate';
+import { useRead } from '../Hooks/useRead'; 
 
 export interface FormInterface {
   title: string;
@@ -15,9 +15,9 @@ interface FormLayoutProps {
 }
 
 function FormLayout({ setHasNotes }: FormLayoutProps) {
-  const { data, refreshData } = useRead(); 
+  const { refreshData } = useRead(); 
   const { createNotes } = useCreate({ refreshData }); 
-  
+
   const currentDate = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState<FormInterface>({
     title: "",
@@ -39,7 +39,6 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
     e.preventDefault();
     console.log("Form submitted with data:", formData);
     await createNotes(formData);
-    console.log("Note created:", data);
     setFormData({
       title: "",
       description: "",
