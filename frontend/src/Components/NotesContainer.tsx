@@ -4,8 +4,8 @@ import NotesCards from "./NotesCards";
 import { useUpdate } from "../Hooks/useUpdate"; 
 
 function NotesContainer() {
-  const { data = [], error } = useRead();
-  const { updateNote } = useUpdate({ refreshData: () => {} }); 
+  const { data = [], error ,refreshData } = useRead();
+  const { updateNote } = useUpdate({ refreshData }); 
 
   const handleUpdate = async (id: string, updatedNote: { title: string; description: string; date: string }) => {
     const noteToUpdate = {

@@ -13,6 +13,7 @@ export function useRead() {
   const [error, setError] = useState<string>('');
 
   const fetchNotes = async () => {
+    console.log('fetched')
     try {
       const response = await apiClient.get('/read');
       const notes = response.data.map((item: { key: string; value: Note }) => item.value);

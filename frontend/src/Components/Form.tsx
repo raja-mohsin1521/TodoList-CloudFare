@@ -37,7 +37,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
+   
     await createNotes(formData);
     setFormData({
       title: "",
@@ -45,6 +45,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
       date: currentDate,
     });
     setHasNotes(true); 
+    
   };
 
   return (
@@ -77,6 +78,9 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
 
       <Button variant="primary" className="mt-3" type="submit">
         Create
+      </Button>
+      <Button variant="danger" className="mt-3 mx-2" onClick={()=>setHasNotes(true)} >
+        Cancel
       </Button>
       <hr className='my-4 ' />
     </Form>

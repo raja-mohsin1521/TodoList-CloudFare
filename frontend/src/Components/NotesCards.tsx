@@ -52,7 +52,7 @@ function NotesCards({ id, title, disc, onUpdate }: NoteProps) {
     disc.length > 200 ? disc.substring(0, 200) + "..." : disc;
 
   return (
-    <Card className="text-center" style={{ width: "18rem" }}>
+    <Card className="text-center" >
       <Card.Body>
         {isEditing ? (
           <Form onSubmit={handleSubmit}>
