@@ -44,7 +44,30 @@ npm install</code></pre>
 
 <h2>Frontend</h2>
 
+<p>The frontend of TodoList-CloudFare is built using React with TypeScript, providing a dynamic and responsive user interface. Below are the features and setup instructions for the frontend:</p>
 
+<h3>Features</h3>
+
+<ul>
+  <li><strong>Dynamic User Interface</strong>: Interactive UI for managing todos.</li>
+  <li><strong>TypeScript</strong>: Type-safe codebase for better development experience.</li>
+  <li><strong>Responsive Design</strong>: Ensures the application works well on various screen sizes.</li>
+</ul>
+
+<h3>Setup</h3>
+
+<ol>
+  <li><strong>Navigate to the Frontend Directory</strong>:
+    <pre><code>cd TodoList-CloudFare/frontend</code></pre>
+  </li>
+  <li><strong>Install Frontend Dependencies</strong>:
+    <pre><code>npm install</code></pre>
+  </li>
+  <li><strong>Run the Development Server</strong>:
+    <p>Start the local development server to test the frontend.</p>
+    <pre><code>npm start</code></pre>
+  </li>
+</ol>
 
 <h2>Development</h2>
 
