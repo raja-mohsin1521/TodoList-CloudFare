@@ -1,29 +1,29 @@
 import { Button } from "react-bootstrap";
-import { useDelete } from "../Hooks/useDelete"; 
+import { useDelete } from "../Hooks/useDelete";
+import useAlertStore from '../AlertStore'; 
 
 interface DeletebtnProps {
-  id: string;  
+  id: string;
 }
 
 function Deletebtn({ id }: DeletebtnProps) {
-  const { deleteNote, data, error } = useDelete(); 
+  const { deleteNote } = useDelete({ refreshData: () => {} });
+  const showAlert = useAlertStore(state => state.showAlert);
 
-  const handleDelete = () => {
-    deleteNote(id); 
+  const handleDelete = async () => {
+    try {
+      await deleteNote(id);
+      showAlert('Note deleted successfully!', 'success');
+    } catch (error) {
+      console.error("Error deleting note:", error);
+      showAlert('Error deleting note', 'danger');
+    }
   };
-console.log(id)
+
   return (
-    <>
-      <Button 
-        variant="danger" 
-        className='mx-2' 
-        onClick={handleDelete} 
-      >
-        Delete
-      </Button>
-      {error && <p>Error: {error}</p>} 
-      {data && <p>Note deleted successfully</p>}
-    </>
+    <Button variant="danger" onClick={handleDelete}>
+      Delete
+    </Button>
   );
 }
 

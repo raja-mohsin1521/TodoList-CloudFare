@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import apiClient from '../Api Client/api-client';
 
-export function useDelete() {
+interface UseDeleteProps {
+  refreshData: () => void;
+}
+
+export function useDelete({ refreshData }: UseDeleteProps) {
   const [data, setData] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const deleteNote = async (id: string) => {
-    console.log(id)
     try {
-      const response = await apiClient.delete('/delete', {
-        data: { id } 
-      });
+      const response = await apiClient.post('/delete', { id });
       setData(response.data);
+      refreshData();
     } catch (err) {
-      setError('An error occurred while deleting the note');
+      setError('An error occurred while deleting data');
     }
   };
 

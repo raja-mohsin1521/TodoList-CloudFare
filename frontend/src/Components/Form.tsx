@@ -1,8 +1,8 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useCreate } from '../Hooks/useCreate';
-import { useRead } from '../Hooks/useRead'; 
+import useAlertStore from '../AlertStore';
 
 export interface FormInterface {
   title: string;
@@ -15,8 +15,8 @@ interface FormLayoutProps {
 }
 
 function FormLayout({ setHasNotes }: FormLayoutProps) {
-  const { refreshData } = useRead(); 
-  const { createNotes } = useCreate({ refreshData }); 
+  const { createNotes } = useCreate({ refreshData: () => {} });
+  const showAlert = useAlertStore(state => state.showAlert);
 
   const currentDate = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState<FormInterface>({
@@ -35,17 +35,20 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
     });
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-   
-    await createNotes(formData);
+    try {
+      await createNotes(formData);
+      showAlert('Note created successfully!', 'success');
+    } catch (error) {
+      showAlert('Error creating note', 'danger');
+    }
     setFormData({
       title: "",
       description: "",
       date: currentDate,
     });
-    setHasNotes(true); 
-    
+    setHasNotes(true);
   };
 
   return (
@@ -56,7 +59,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
         <Form.Control
           type="text"
           name="title"
-          value={formData.title || ""}
+          value={formData.title}
           onChange={handleChange}
           placeholder="Enter title..."
           required
@@ -68,7 +71,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
         <Form.Control
           as="textarea"
           name="description"
-          value={formData.description || ""}
+          value={formData.description}
           onChange={handleChange}
           placeholder="Leave a comment here"
           style={{ height: "150px" }}
@@ -79,7 +82,7 @@ function FormLayout({ setHasNotes }: FormLayoutProps) {
       <Button variant="primary" className="mt-3" type="submit">
         Create
       </Button>
-      <Button variant="danger" className="mt-3 mx-2" onClick={()=>setHasNotes(true)} >
+      <Button variant="secondary" className="mt-3 mx-2" onClick={() => setHasNotes(true)}>
         Cancel
       </Button>
       <hr className='my-4 ' />

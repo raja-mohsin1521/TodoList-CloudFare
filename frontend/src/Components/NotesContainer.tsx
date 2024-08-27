@@ -1,42 +1,64 @@
+import { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useRead } from "../Hooks/useRead";
 import NotesCards from "./NotesCards";
-import { useUpdate } from "../Hooks/useUpdate"; 
+import { useUpdate } from "../Hooks/useUpdate";
+import SortSelector from "./SortSelector";
+import useAlertStore from '../AlertStore'; 
+
+export interface Note {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+}
 
 function NotesContainer() {
-  const { data = [], error ,refreshData } = useRead();
-  const { updateNote } = useUpdate({ refreshData }); 
+  const { data = [], error, refreshData } = useRead();
+  const { updateNote } = useUpdate({ refreshData });
+  const [sortedData, setSortedData] = useState<Note[]>([]);
+  const showAlert = useAlertStore(state => state.showAlert);
 
-  const handleUpdate = async (id: string, updatedNote: { title: string; description: string; date: string }) => {
+  useEffect(() => {
+    setSortedData(data);
+  }, [data]);
+
+  const handleUpdate = async (id: string, updatedNote: Omit<Note, "id">) => {
     const noteToUpdate = {
       id,
       ...updatedNote,
     };
     try {
-      await updateNote(noteToUpdate); 
-      console.log("Updating note:", noteToUpdate);
+      await updateNote(noteToUpdate);
+      showAlert('Note updated successfully!', 'success');
     } catch (error) {
       console.error("Error updating note:", error);
+      showAlert('Error updating note', 'danger');
     }
   };
 
-  const sortedData = (data || [])
-    .filter(note => note && note.date)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const handleSort = (sortedNotes: Note[]) => {
+    setSortedData(sortedNotes);
+  };
 
   return (
     <div>
-    <h1 className="text-center">Notes</h1>
-      {error && <p>Error: {error}</p>}
-      {sortedData.length === 0 && !error && <p className="text-center mt-4">No notes available.</p>}
+      <h1 className="text-center mt-5">Notes</h1>
+      <Row className="text-end">
+        <SortSelector data={data} onSort={handleSort} />
+      </Row>
+      {error && <p className="text-center mt-4">Error: {error}</p>}
+      {sortedData.length === 0 && !error && (
+        <p className="text-center mt-4">No notes available.</p>
+      )}
       {sortedData.length > 0 && (
         <Row>
-          {sortedData.map(note => (
+          {sortedData.map((note) => (
             <Col md={3} className="my-3" key={note.id}>
               <NotesCards
                 id={note.id}
-                title={note.title || 'Untitled'}
-                disc={note.description || 'No description available'}
+                title={note.title || "Untitled"}
+                disc={note.description || "No description available"}
                 date={note.date}
                 onUpdate={handleUpdate}
               />

@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Button, Form } from "react-bootstrap";
-import Card from "react-bootstrap/Card";
+import { Button, Form, Card } from "react-bootstrap";
 import Deletebtn from "./DeleteBtn";
+import useAlertStore from "../AlertStore";
 
 interface NoteProps {
   id: string;
@@ -14,15 +14,15 @@ interface NoteProps {
   ) => void;
 }
 
-function NotesCards({ id, title, disc, onUpdate }: NoteProps) {
+function NotesCards({ id, title, disc, date, onUpdate }: NoteProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const currentDate = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
     title: title || "",
     description: disc || "",
-    date: currentDate,
+    date: date || "",
   });
+  const showAlert = useAlertStore(state => state.showAlert);
 
   const handleReadMoreClick = () => {
     setIsExpanded(!isExpanded);
@@ -42,9 +42,14 @@ function NotesCards({ id, title, disc, onUpdate }: NoteProps) {
     });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    onUpdate(id, formData);
+    try {
+      await onUpdate(id, formData);
+      showAlert('Note updated successfully!', 'success');
+    } catch (error) {
+      showAlert('Error updating note', 'danger');
+    }
     setIsEditing(false);
   };
 
@@ -52,7 +57,7 @@ function NotesCards({ id, title, disc, onUpdate }: NoteProps) {
     disc.length > 200 ? disc.substring(0, 200) + "..." : disc;
 
   return (
-    <Card className="text-center" >
+    <Card className="text-center">
       <Card.Body>
         {isEditing ? (
           <Form onSubmit={handleSubmit}>
