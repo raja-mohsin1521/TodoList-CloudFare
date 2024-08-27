@@ -45,6 +45,7 @@ function NotesContainer() {
   };
 
   const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
+    console.log("Filtered Notes:", filteredNotes); // Debugging log
     setFilteredData(filteredNotes);
     setSortedData(filteredNotes); 
   };
@@ -54,9 +55,12 @@ function NotesContainer() {
       <h1 className="text-center mt-5">Notes</h1>
       
       <Row className="text-end">
-        <Col className=" mt-2" xs={7}>
-        <SearchBar  data={data} onUpdateFilteredNotes={handleUpdateFilteredNotes}  /></Col>
-    <Col xs={4}>    <SortSelector data={filteredData} onSort={handleSort} /></Col>
+        <Col className="mt-2" xs={7}>
+          <SearchBar data={data} onUpdateFilteredNotes={handleUpdateFilteredNotes} />
+        </Col>
+        <Col xs={4}>
+          <SortSelector data={filteredData} onSort={handleSort} />
+        </Col>
       </Row>
       {error && <p className="text-center mt-4">Error: {error}</p>}
       {sortedData.length === 0 && !error && (

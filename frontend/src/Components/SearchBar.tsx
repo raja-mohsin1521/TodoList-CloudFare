@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Note } from './NotesContainer';
 
 interface SearchBarProps {
@@ -13,10 +13,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, onUpdateFilteredNotes }) =>
     const value = e.target.value;
     setInputValue(value);
 
-   
-    const filteredNotes = data.filter(note =>
-      note.title.toLowerCase().includes(value.toLowerCase())
-    );
+    const filteredNotes = data.filter(note => {
+      const title = note.title || ''; 
+      return title.toLowerCase().includes(value.toLowerCase());
+    });
 
     onUpdateFilteredNotes(filteredNotes);
   };
