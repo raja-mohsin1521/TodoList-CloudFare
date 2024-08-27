@@ -54,7 +54,7 @@ function NotesContainer() {
       <h1 className="text-center mt-5">Notes</h1>
       
       <Row className="text-end">
-        <Col className=" mt-2" xs={8}>
+        <Col className=" mt-2" xs={7}>
         <SearchBar  data={data} onUpdateFilteredNotes={handleUpdateFilteredNotes}  /></Col>
     <Col xs={4}>    <SortSelector data={filteredData} onSort={handleSort} /></Col>
       </Row>
