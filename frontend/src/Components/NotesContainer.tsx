@@ -5,6 +5,7 @@ import NotesCards from "./NotesCards";
 import { useUpdate } from "../Hooks/useUpdate";
 import SortSelector from "./SortSelector";
 import useAlertStore from '../AlertStore'; 
+import SearchBar from "./SearchBar";
 
 export interface Note {
   id: string;
@@ -17,9 +18,11 @@ function NotesContainer() {
   const { data = [], error, refreshData } = useRead();
   const { updateNote } = useUpdate({ refreshData });
   const [sortedData, setSortedData] = useState<Note[]>([]);
+  const [filteredData, setFilteredData] = useState<Note[]>([]);
   const showAlert = useAlertStore(state => state.showAlert);
 
   useEffect(() => {
+    setFilteredData(data);
     setSortedData(data);
   }, [data]);
 
@@ -41,11 +44,19 @@ function NotesContainer() {
     setSortedData(sortedNotes);
   };
 
+  const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
+    setFilteredData(filteredNotes);
+    setSortedData(filteredNotes); 
+  };
+
   return (
     <div>
       <h1 className="text-center mt-5">Notes</h1>
+      
       <Row className="text-end">
-        <SortSelector data={data} onSort={handleSort} />
+        <Col className=" mt-2" xs={8}>
+        <SearchBar  data={data} onUpdateFilteredNotes={handleUpdateFilteredNotes}  /></Col>
+    <Col xs={4}>    <SortSelector data={filteredData} onSort={handleSort} /></Col>
       </Row>
       {error && <p className="text-center mt-4">Error: {error}</p>}
       {sortedData.length === 0 && !error && (
