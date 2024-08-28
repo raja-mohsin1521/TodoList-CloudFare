@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import apiClient from '../Api Client/api-client';
+import { useState, useEffect } from "react";
+import apiClient from "../Api Client/api-client";
 
 interface Note {
   id: string;
@@ -13,24 +13,22 @@ export function useRead() {
   const [error, setError] = useState<string>('');
 
   const fetchNotes = async () => {
-    console.log('fetched')
     try {
+      console.log('Fetching notes...'); 
       const response = await apiClient.get('/read');
+      console.log('Fetched data:', response.data); 
       const notes = response.data.map((item: { key: string; value: Note }) => item.value);
       setData(notes);
       setError('');
     } catch (err) {
+      console.error('Error fetching notes:', err); 
       setError('An error occurred while fetching data');
     }
-  };
-
-  const refreshData = async () => {
-    await fetchNotes();
   };
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
-  return { data, error, refreshData };
+  return { data, error, fetchNotes };
 }

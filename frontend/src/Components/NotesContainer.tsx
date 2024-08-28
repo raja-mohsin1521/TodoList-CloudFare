@@ -15,8 +15,8 @@ export interface Note {
 }
 
 function NotesContainer() {
-  const { data = [], error, refreshData } = useRead();
-  const { updateNote } = useUpdate({ refreshData });
+  const { data = [], error, fetchNotes } = useRead(); 
+  const { updateNote } = useUpdate({ fetchNotes });
   const [sortedData, setSortedData] = useState<Note[]>([]);
   const [filteredData, setFilteredData] = useState<Note[]>([]);
   const showAlert = useAlertStore(state => state.showAlert);
@@ -27,10 +27,7 @@ function NotesContainer() {
   }, [data]);
 
   const handleUpdate = async (id: string, updatedNote: Omit<Note, "id">) => {
-    const noteToUpdate = {
-      id,
-      ...updatedNote,
-    };
+    const noteToUpdate = { id, ...updatedNote };
     try {
       await updateNote(noteToUpdate);
       showAlert('Note updated successfully!', 'success');
@@ -45,9 +42,9 @@ function NotesContainer() {
   };
 
   const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
-    console.log("Filtered Notes:", filteredNotes); // Debugging log
+    console.log("Filtered Notes:", filteredNotes); 
     setFilteredData(filteredNotes);
-    setSortedData(filteredNotes); 
+    setSortedData(filteredNotes);
   };
 
   return (
@@ -62,23 +59,31 @@ function NotesContainer() {
           <SortSelector data={filteredData} onSort={handleSort} />
         </Col>
       </Row>
+
       {error && <p className="text-center mt-4">Error: {error}</p>}
+
       {sortedData.length === 0 && !error && (
         <p className="text-center mt-4">No notes available.</p>
       )}
+
       {sortedData.length > 0 && (
         <Row>
-          {sortedData.map((note) => (
-            <Col md={3} className="my-3" key={note.id}>
-              <NotesCards
-                id={note.id}
-                title={note.title || "Untitled"}
-                disc={note.description || "No description available"}
-                date={note.date}
-                onUpdate={handleUpdate}
-              />
-            </Col>
-          ))}
+          {sortedData.map((note) => {
+            if (!note || !note.id) {
+              return null; 
+            }
+            return (
+              <Col md={3} className="my-3" key={note.id}>
+                <NotesCards
+                  id={note.id}
+                  title={note.title || "Untitled"}
+                  disc={note.description || "No description available"}
+                  date={note.date}
+                  onUpdate={handleUpdate}
+                />
+              </Col>
+            );
+          })}
         </Row>
       )}
     </div>

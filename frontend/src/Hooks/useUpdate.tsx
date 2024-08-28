@@ -2,22 +2,20 @@ import { useState } from 'react';
 import apiClient from '../Api Client/api-client';
 
 interface UseUpdateProps {
-  refreshData: () => void;
+  fetchNotes: () => void; 
 }
 
-export function useUpdate({ refreshData }: UseUpdateProps) {
-  const [data, setData] = useState<string>('');
+export function useUpdate({ fetchNotes }: UseUpdateProps) {
   const [error, setError] = useState<string>('');
 
   const updateNote = async (payload: { id: string; title: string; description: string; date: string }) => {
     try {
-      const response = await apiClient.put('/update', payload);
-      setData(response.data);
-      refreshData();
+      await apiClient.put('/update', payload);
+      fetchNotes(); 
     } catch (err) {
       setError('An error occurred while updating data');
     }
   };
 
-  return { data, error, updateNote };
+  return { error, updateNote };
 }

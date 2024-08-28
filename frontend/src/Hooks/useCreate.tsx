@@ -1,24 +1,22 @@
 import { useState } from 'react';
-import apiClient from '../Api Client/api-client'; 
+import apiClient from '../Api Client/api-client';
 import { FormInterface } from '../Components/Form';
 
 interface UseCreateProps {
-  refreshData: () => void;
+  fetchNotes: () => void; // Use fetchNotes here
 }
 
-export function useCreate({ refreshData }: UseCreateProps) {
-  const [data, setData] = useState<string>('');
+export function useCreate({ fetchNotes }: UseCreateProps) {
   const [error, setError] = useState<string>('');
 
   const createNotes = async (payload: FormInterface) => {
     try {
-      const response = await apiClient.post('/add', payload);
-      setData(response.data);
-      refreshData();
+      await apiClient.post('/add', payload);
+      fetchNotes(); // Call fetchNotes directly
     } catch (err) {
       setError('An error occurred while sending data');
     }
   };
 
-  return { data, error, createNotes };
+  return { error, createNotes };
 }

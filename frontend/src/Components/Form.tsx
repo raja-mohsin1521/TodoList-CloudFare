@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useCreate } from '../Hooks/useCreate';
+import { useRead } from '../Hooks/useRead'; // Import useRead
 import useAlertStore from '../AlertStore';
 
 export interface FormInterface {
@@ -15,7 +16,8 @@ interface FormLayoutProps {
 }
 
 function FormLayout({ setHasNotes }: FormLayoutProps) {
-  const { createNotes } = useCreate({ refreshData: () => {} });
+  const { fetchNotes } = useRead(); // Get fetchNotes
+  const { createNotes } = useCreate({ fetchNotes }); // Pass fetchNotes
   const showAlert = useAlertStore(state => state.showAlert);
 
   const currentDate = new Date().toISOString().split("T")[0];

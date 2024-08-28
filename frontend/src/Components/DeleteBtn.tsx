@@ -1,5 +1,6 @@
 import { Button } from "react-bootstrap";
 import { useDelete } from "../Hooks/useDelete";
+import { useRead } from "../Hooks/useRead"; 
 import useAlertStore from '../AlertStore'; 
 
 interface DeletebtnProps {
@@ -7,7 +8,8 @@ interface DeletebtnProps {
 }
 
 function Deletebtn({ id }: DeletebtnProps) {
-  const { deleteNote } = useDelete({ refreshData: () => {} });
+  const { fetchNotes } = useRead(); 
+  const { deleteNote } = useDelete({fetchNotes }); 
   const showAlert = useAlertStore(state => state.showAlert);
 
   const handleDelete = async () => {
