@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useRead } from "../Hooks/useRead";
 import NotesCards from "./NotesCards";
@@ -6,6 +6,7 @@ import { useUpdate } from "../Hooks/useUpdate";
 import SortSelector from "./SortSelector";
 import useAlertStore from '../AlertStore'; 
 import SearchBar from "./SearchBar";
+
 
 export interface Note {
   id: string;
@@ -26,26 +27,25 @@ function NotesContainer() {
     setSortedData(data);
   }, [data]);
 
-  const handleUpdate = async (id: string, updatedNote: Omit<Note, "id">) => {
-    const noteToUpdate = { id, ...updatedNote };
+  const handleUpdate = useCallback(async (id: string, updatedNote: Omit<Note, "id">) => {
     try {
-      await updateNote(noteToUpdate);
+      await updateNote({ id, ...updatedNote });
       showAlert('Note updated successfully!', 'success');
     } catch (error) {
       console.error("Error updating note:", error);
       showAlert('Error updating note', 'danger');
     }
-  };
+  }, [updateNote, showAlert]);
 
-  const handleSort = (sortedNotes: Note[]) => {
+  const handleSort = useCallback((sortedNotes: Note[]) => {
     setSortedData(sortedNotes);
-  };
+  }, []);
 
-  const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
-    console.log("Filtered Notes:", filteredNotes); 
+  const handleUpdateFilteredNotes = useCallback((filteredNotes: Note[]) => {
+    console.log("Filtered Notes:", filteredNotes);
     setFilteredData(filteredNotes);
     setSortedData(filteredNotes);
-  };
+  }, []);
 
   return (
     <div>

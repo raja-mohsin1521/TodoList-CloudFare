@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useCallback } from "react";
 import { Button, Form, Card } from "react-bootstrap";
 import Deletebtn from "./DeleteBtn";
 import useAlertStore from "../AlertStore";
@@ -14,7 +14,7 @@ interface NoteProps {
   ) => void;
 }
 
-function NotesCards({ id, title, disc, date, onUpdate }: NoteProps) {
+const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onUpdate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,25 +24,23 @@ function NotesCards({ id, title, disc, date, onUpdate }: NoteProps) {
   });
   const showAlert = useAlertStore(state => state.showAlert);
 
-  const handleReadMoreClick = () => {
-    setIsExpanded(!isExpanded);
-  };
+  const handleReadMoreClick = useCallback(() => {
+    setIsExpanded(prev => !prev);
+  }, []);
 
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
+  const handleEditClick = useCallback(() => {
+    setIsEditing(prev => !prev);
+  }, []);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
-    });
-  };
+    }));
+  }, []);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
     try {
       await onUpdate(id, formData);
@@ -51,10 +49,9 @@ function NotesCards({ id, title, disc, date, onUpdate }: NoteProps) {
       showAlert('Error updating note', 'danger');
     }
     setIsEditing(false);
-  };
+  }, [formData, id, onUpdate, showAlert]);
 
-  const manageDiscLength =
-    disc.length > 200 ? disc.substring(0, 200) + "..." : disc;
+  const manageDiscLength = disc.length > 200 ? disc.substring(0, 200) + "..." : disc;
 
   return (
     <Card className="text-center">
@@ -124,6 +121,6 @@ function NotesCards({ id, title, disc, date, onUpdate }: NoteProps) {
       </Card.Body>
     </Card>
   );
-}
+});
 
 export default NotesCards;

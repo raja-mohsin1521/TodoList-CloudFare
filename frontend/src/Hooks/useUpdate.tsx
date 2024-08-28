@@ -11,7 +11,7 @@ export function useUpdate({ fetchNotes }: UseUpdateProps) {
   const updateNote = async (payload: { id: string; title: string; description: string; date: string }) => {
     try {
       await apiClient.put('/update', payload);
-      fetchNotes(); 
+     
     } catch (err) {
       setError('An error occurred while updating data');
     }
