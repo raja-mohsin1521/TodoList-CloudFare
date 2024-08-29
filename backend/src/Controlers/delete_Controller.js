@@ -12,9 +12,9 @@ export async function handleDelete(request, env) {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate', // Prevent caching
-                    'Pragma': 'no-cache', // For backward compatibility
-                    'Expires': '0' // For backward compatibility
+                    'Cache-Control': 'no-cache, no-store, must-revalidate', 
+                    'Pragma': 'no-cache',
+                    'Expires': '0' 
                 },
             }
         );
@@ -25,9 +25,9 @@ export async function handleDelete(request, env) {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate', // Prevent caching
-                    'Pragma': 'no-cache', // For backward compatibility
-                    'Expires': '0' // For backward compatibility
+                    'Cache-Control': 'no-cache, no-store, must-revalidate', 
+                    'Pragma': 'no-cache', 
+                    'Expires': '0' 
                 },
             }
         );

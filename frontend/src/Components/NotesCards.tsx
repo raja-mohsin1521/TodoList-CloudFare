@@ -17,7 +17,6 @@ interface NoteProps {
 const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onUpdate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  
   const [formData, setFormData] = useState({
     title: title || "",
     description: disc || "",

@@ -16,7 +16,8 @@ export interface Note {
 
 const NotesContainer = () => {
   const { data, error, fetchNotes } = useRead();
-  console.log('data--------->',data)
+
+  
  
   const { updateNote } = useUpdate();
   const [sortedData, setSortedData] = useState<Note[]>([]);

@@ -8,6 +8,10 @@ compatibility_flags = ["nodejs_compat"]
 binding = "NOTES"
 id = "df4f356028604a85b65ec2e24a5560d0"
 
+[[kv_namespaces]]
+binding = "NOTES_2"
+id = "0c645439477245a0b72b07015d7b0df4"
+
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Worker, running it closer to your back-end infrastructure
 # rather than the end user may result in better performance.

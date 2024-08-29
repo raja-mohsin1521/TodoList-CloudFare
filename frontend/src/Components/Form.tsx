@@ -21,8 +21,9 @@ interface FormLayoutProps {
 
 function FormLayout({ setHasNotes }: FormLayoutProps) {
  
-  const { fetchNotes } = useRead(); 
-const { createNotes } = useCreate({ fetchNotes }); 
+  const { fetchNotes ,data} = useRead(); 
+  
+const { createNotes } = useCreate(); 
   const showAlert = useAlertStore(state => state.showAlert);
 
   const currentDate = new Date().toISOString().split("T")[0];
@@ -46,6 +47,7 @@ const { createNotes } = useCreate({ fetchNotes });
     e.preventDefault();
     try {
       await createNotes(formData);
+      await fetchNotes()
       showAlert('Note created successfully!', 'success');
     } catch (error) {
       showAlert('Error creating note', 'danger');
