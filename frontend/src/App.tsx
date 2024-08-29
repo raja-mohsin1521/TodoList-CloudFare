@@ -8,6 +8,8 @@ import { useRead } from './Hooks/useRead';
 import useAlertStore from './AlertStore';
 
 function App() {
+ 
+  
   const { data } = useRead(); 
   const [hasNotes, setHasNotes] = useState(false);
   const { alert, hideAlert } = useAlertStore(state => ({

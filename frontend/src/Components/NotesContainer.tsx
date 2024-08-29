@@ -1,12 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { Col, Row } from "react-bootstrap";
-import { useRead } from "../Hooks/useRead";
-import NotesCards from "./NotesCards";
-import { useUpdate } from "../Hooks/useUpdate";
-import SortSelector from "./SortSelector";
-import useAlertStore from '../AlertStore'; 
-import SearchBar from "./SearchBar";
-
+import { useState, useEffect } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useRead } from '../Hooks/useRead';
+import NotesCards from './NotesCards';
+import { useUpdate } from '../Hooks/useUpdate';
+import SortSelector from './SortSelector';
+import useAlertStore from '../AlertStore';
+import SearchBar from './SearchBar';
 
 export interface Note {
   id: string;
@@ -15,37 +14,44 @@ export interface Note {
   date: string;
 }
 
-function NotesContainer() {
-  const { data = [], error, fetchNotes } = useRead(); 
-  const { updateNote } = useUpdate({ fetchNotes });
+const NotesContainer = () => {
+  const { data, error, fetchNotes } = useRead();
+  console.log('data--------->',data)
+ 
+  const { updateNote } = useUpdate();
   const [sortedData, setSortedData] = useState<Note[]>([]);
   const [filteredData, setFilteredData] = useState<Note[]>([]);
-  const showAlert = useAlertStore(state => state.showAlert);
+  const showAlert = useAlertStore((state) => state.showAlert);
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
   useEffect(() => {
     setFilteredData(data);
     setSortedData(data);
   }, [data]);
 
-  const handleUpdate = useCallback(async (id: string, updatedNote: Omit<Note, "id">) => {
+  const handleUpdate = async (id: string, updatedNote: Omit<Note, "id">) => {
     try {
       await updateNote({ id, ...updatedNote });
       showAlert('Note updated successfully!', 'success');
+      fetchNotes(); 
     } catch (error) {
-      console.error("Error updating note:", error);
+      console.error('Error updating note:', error);
       showAlert('Error updating note', 'danger');
     }
-  }, [updateNote, showAlert]);
+  };
 
-  const handleSort = useCallback((sortedNotes: Note[]) => {
+  const handleSort = (sortedNotes: Note[]) => {
     setSortedData(sortedNotes);
-  }, []);
+  };
 
-  const handleUpdateFilteredNotes = useCallback((filteredNotes: Note[]) => {
-    console.log("Filtered Notes:", filteredNotes);
+  const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
+   
     setFilteredData(filteredNotes);
     setSortedData(filteredNotes);
-  }, []);
+  };
 
   return (
     <div>
@@ -70,14 +76,14 @@ function NotesContainer() {
         <Row>
           {sortedData.map((note) => {
             if (!note || !note.id) {
-              return null; 
+              return null;
             }
             return (
               <Col md={3} className="my-3" key={note.id}>
                 <NotesCards
                   id={note.id}
-                  title={note.title || "Untitled"}
-                  disc={note.description || "No description available"}
+                  title={note.title || 'Untitled'}
+                  disc={note.description || 'No description available'}
                   date={note.date}
                   onUpdate={handleUpdate}
                 />
@@ -88,6 +94,6 @@ function NotesContainer() {
       )}
     </div>
   );
-}
+};
 
 export default NotesContainer;

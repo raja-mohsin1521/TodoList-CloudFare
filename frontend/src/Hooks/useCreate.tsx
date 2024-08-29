@@ -3,7 +3,7 @@ import apiClient from '../Api Client/api-client';
 import { FormInterface } from '../Components/Form';
 
 interface UseCreateProps {
-  fetchNotes: () => void; // Use fetchNotes here
+  fetchNotes: () => void; 
 }
 
 export function useCreate({ fetchNotes }: UseCreateProps) {
@@ -11,8 +11,9 @@ export function useCreate({ fetchNotes }: UseCreateProps) {
 
   const createNotes = async (payload: FormInterface) => {
     try {
-      await apiClient.post('/add', payload);
-      fetchNotes(); // Call fetchNotes directly
+      await apiClient.post('/add', payload).then(res=>   console.log(res.data.note));
+      console.log()
+      fetchNotes(); 
     } catch (err) {
       setError('An error occurred while sending data');
     }

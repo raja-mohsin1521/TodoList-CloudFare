@@ -26,6 +26,6 @@ export async function handleReadAll(request, env) {
         });
     } catch (e) {
         console.error('Error in handleReadAll:', e);
-        return new Response('Internal Server Error', { status: 500 });
+        return new Response(`Internal Server Error`+e, { status: 500 });
     }
 }
