@@ -50,6 +50,8 @@ npm install</code></pre>
 
 <ul>
   <li><strong>Dynamic User Interface</strong>: Interactive UI for managing todos.</li>
+  <li><strong>CRUD Operations</strong>: You can create, read, update, and delete notes. Each note includes a title, description, and date. The date is automatically set to the current date when creating or updating a note.</li>
+  <li><strong>Search and Sort</strong>: Search for notes by title or sort them by the date.</li>
   <li><strong>TypeScript</strong>: Type-safe codebase for better development experience.</li>
   <li><strong>Responsive Design</strong>: Ensures the application works well on various screen sizes.</li>
 </ul>
@@ -81,7 +83,3 @@ miniflare --watch</code></pre>
 <h2>Contributing</h2>
 
 <p>Contributions are welcome. Feel free to submit issues or pull requests with suggestions or improvements.</p>
-
-<h2>License</h2>
-
-<p>This project is licensed under the MIT License. See the <a href="LICENSE">LICENSE</a> file for details.</p>
