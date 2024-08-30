@@ -5,10 +5,6 @@ import { useCreate } from '../Hooks/useCreate';
 import { useRead } from '../Hooks/useRead'; 
 import useAlertStore from '../AlertStore';
 
-
-
-
-
 export interface FormInterface {
   title: string;
   description: string;
@@ -20,10 +16,8 @@ interface FormLayoutProps {
 }
 
 function FormLayout({ setHasNotes }: FormLayoutProps) {
- 
-  const { fetchNotes ,data} = useRead(); 
-  
-const { createNotes } = useCreate(); 
+  const { fetchNotes } = useRead(); 
+  const { createNotes } = useCreate(); 
   const showAlert = useAlertStore(state => state.showAlert);
 
   const currentDate = new Date().toISOString().split("T")[0];
@@ -32,6 +26,7 @@ const { createNotes } = useCreate();
     description: "",
     date: currentDate,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,11 +38,17 @@ const { createNotes } = useCreate();
     });
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await createNotes(formData);
-      await fetchNotes()
+      await createNotes(formData, imageFile);
+      await fetchNotes();
       showAlert('Note created successfully!', 'success');
     } catch (error) {
       showAlert('Error creating note', 'danger');
@@ -57,6 +58,7 @@ const { createNotes } = useCreate();
       description: "",
       date: currentDate,
     });
+    setImageFile(null);
     setHasNotes(true);
   };
 
@@ -84,6 +86,15 @@ const { createNotes } = useCreate();
           onChange={handleChange}
           placeholder="Leave a comment here"
           style={{ height: "150px" }}
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicImage">
+        <Form.Label className="text-center">Image</Form.Label>
+        <Form.Control
+          type="file"
+          onChange={handleImageChange}
           required
         />
       </Form.Group>

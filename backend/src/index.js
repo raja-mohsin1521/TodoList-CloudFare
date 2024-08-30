@@ -1,3 +1,5 @@
+// src/index.js
+
 import { handleCreate } from './Controlers/create_Controller.js';
 import { handleDelete } from './Controlers/delete_Controller.js';
 import { handleReadAll } from './Controlers/read_Controller.js';
@@ -15,7 +17,6 @@ export default {
         const url = new URL(request.url);
         const pathname = url.pathname;
 
-        // Handle preflight requests (OPTIONS)
         if (request.method === 'OPTIONS') {
             return new Response(null, {
                 headers: {
@@ -26,12 +27,10 @@ export default {
             });
         }
 
-        // Handle other requests
         const routeHandler = routes[pathname];
 
         if (routeHandler) {
             try {
-                // Execute the route handler and modify the response with CORS headers
                 const response = await routeHandler(request, env, ctx);
                 const modifiedResponse = new Response(response.body, response);
                 modifiedResponse.headers.set('Access-Control-Allow-Origin', '*');

@@ -1,24 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { useRead } from '../Hooks/useRead';
+import { Note, useRead } from '../Hooks/useRead';
 import NotesCards from './NotesCards';
 import { useUpdate } from '../Hooks/useUpdate';
 import SortSelector from './SortSelector';
 import useAlertStore from '../AlertStore';
 import SearchBar from './SearchBar';
 
-export interface Note {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-}
-
 const NotesContainer = () => {
   const { data, error, fetchNotes } = useRead();
-
-  
- 
   const { updateNote } = useUpdate();
   const [sortedData, setSortedData] = useState<Note[]>([]);
   const [filteredData, setFilteredData] = useState<Note[]>([]);
@@ -33,11 +23,15 @@ const NotesContainer = () => {
     setSortedData(data);
   }, [data]);
 
-  const handleUpdate = async (id: string, updatedNote: Omit<Note, "id">) => {
+  const handleUpdate = async (id: string, updatedNote: Omit<Note, 'id'>) => {
     try {
-      await updateNote({ id, ...updatedNote });
+      await updateNote({
+        id,
+        ...updatedNote,
+        description: '',
+      });
       showAlert('Note updated successfully!', 'success');
-      fetchNotes(); 
+      fetchNotes();
     } catch (error) {
       console.error('Error updating note:', error);
       showAlert('Error updating note', 'danger');
@@ -49,7 +43,6 @@ const NotesContainer = () => {
   };
 
   const handleUpdateFilteredNotes = (filteredNotes: Note[]) => {
-   
     setFilteredData(filteredNotes);
     setSortedData(filteredNotes);
   };
@@ -57,7 +50,7 @@ const NotesContainer = () => {
   return (
     <div>
       <h1 className="text-center mt-5">Notes</h1>
-      
+
       <Row className="text-end">
         <Col className="mt-2" xs={7}>
           <SearchBar data={data} onUpdateFilteredNotes={handleUpdateFilteredNotes} />
@@ -84,8 +77,9 @@ const NotesContainer = () => {
                 <NotesCards
                   id={note.id}
                   title={note.title || 'Untitled'}
-                  disc={note.description || 'No description available'}
+                  message={note.message || 'No description available'}
                   date={note.date}
+                  imageUrl={note.imageUrl}
                   onUpdate={handleUpdate}
                 />
               </Col>

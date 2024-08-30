@@ -1,27 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import apiClient from '../Api Client/api-client';
 import useDataStore from '../DataStore';
+
+
 
 export interface Note {
   id: string;
   title: string;
-  description: string;
   date: string;
+  imageUrl: string;
+  message: string;
 }
 
 export function useRead() {
-  // const [data, setData] = useState<Note[]>([]);
+  
   const [error, setError] = useState<string>('');
   const { data, setData } = useDataStore();
 
-// useEffect(()=>{
-//   fetchNotes();
-// },[])
+
   const fetchNotes = async () => {
     try {
       const response = await apiClient.get('/read');
-      const notes = response.data?.filter((item: { value: Note }) => item?.value).map((item: { value: Note }) => item?.value) || [];
-    
+      const notes = response.data?.map((item: any) => item.note) || [];
+      
+      const formattedNotes = notes.map((note: any) => ({
+        id: note.id,
+        imageUrl: note.imageUrl,
+        message: note.message,
+        title: note.title,
+      }));
+    console.log(formattedNotes)
       setData(notes);
       setError('');
     } catch (err) {

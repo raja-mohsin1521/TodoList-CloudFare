@@ -5,7 +5,7 @@ import apiClient from '../Api Client/api-client';
 export function useUpdate() {
   const [error, setError] = useState<string>('');
 
-  const updateNote = async (payload: { id: string; title: string; description: string; date: string }) => {
+  const updateNote = async (payload: { id: string; title: string; description: string; date: string ; imageUrl:string; }) => {
     try {
       await apiClient.put('/update', payload);
    

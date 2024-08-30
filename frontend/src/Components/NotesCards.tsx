@@ -1,26 +1,51 @@
-import React, { useState, ChangeEvent, FormEvent, useCallback } from "react";
-import { Button, Form, Card } from "react-bootstrap";
-import Deletebtn from "./DeleteBtn";
-import useAlertStore from "../AlertStore";
+import React, { useState, ChangeEvent, FormEvent, useCallback } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import Deletebtn from './DeleteBtn';
+import useAlertStore from '../AlertStore';
+import { Note } from '../Hooks/useRead';
+import styled from 'styled-components';
+import noImg from '../../public/No_Image_Available.jpg';
 
-interface NoteProps {
+interface NoteProps extends Omit<Note, 'id'> {
+  imageUrl: string;
   id: string;
-  title: string;
-  disc: string;
-  date: string;
-  onUpdate: (
-    id: string,
-    updatedNote: { title: string; description: string; date: string }
-  ) => void;
+  onUpdate: (id: string, updatedNote: Omit<Note, 'id'>) => void;
 }
 
-const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onUpdate }) => {
+const StyledCard = styled.div<{ imageurl: string }>`
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  color: black;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 1.25rem;
+  text-align: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(${props => props.imageurl ? `https://pub-af18b9cede00452d9b653b4c02e4a224.r2.dev/${props.imageurl}` : noImg});
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+    z-index: -1;
+    border-radius: 0.25rem;
+  }
+`;
+
+const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, message, date, imageUrl, onUpdate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    title: title || "",
-    description: disc || "",
-    date: date || "",
+    title: title || '',
+    message: message || '',
+    date: date || '',
+    imageUrl: imageUrl || '',
   });
   const showAlert = useAlertStore(state => state.showAlert);
 
@@ -43,8 +68,12 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onU
   const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await onUpdate(id, formData);
-      
+      await onUpdate(id, {
+        title: formData.title,
+        message: formData.message,
+        date: formData.date,
+        imageUrl: formData.imageUrl,
+      });
       showAlert('Note updated successfully!', 'success');
     } catch (error) {
       showAlert('Error updating note', 'danger');
@@ -52,10 +81,10 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onU
     setIsEditing(false);
   }, [formData, id, onUpdate, showAlert]);
 
-  const manageDiscLength = disc.length > 200 ? disc.substring(0, 200) + "..." : disc;
+  const manageDescLength = message.length > 200 ? message.substring(0, 200) + '...' : message;
 
   return (
-    <Card className="text-center">
+    <StyledCard imageurl={imageUrl}>
       <Card.Body>
         {isEditing ? (
           <Form onSubmit={handleSubmit}>
@@ -69,14 +98,14 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onU
                 required
               />
             </Form.Group>
-            <Form.Group controlId="formDescription">
+            <Form.Group controlId="formMessage">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
-                name="description"
-                value={formData.description}
+                name="message"
+                value={formData.message}
                 onChange={handleChange}
-                style={{ height: "150px" }}
+                style={{ height: '150px' }}
                 required
               />
             </Form.Group>
@@ -93,19 +122,19 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onU
           </Form>
         ) : (
           <>
-            <Card.Title>{formData.title || "Untitled"}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">
-              {formData.date || "No date"}
+            <Card.Title className="mb-2">{formData.title || 'Untitled'}</Card.Title>
+            <Card.Subtitle className="mb-3 text-muted">
+              {formData.date || 'No date'}
             </Card.Subtitle>
-            <Card.Text>
-              {isExpanded ? formData.description : manageDiscLength}
-              {formData.description.length > 200 && (
+            <Card.Text className="mb-3">
+              {isExpanded ? formData.message : manageDescLength}
+              {formData.message.length > 200 && (
                 <Button
                   variant="link"
                   onClick={handleReadMoreClick}
                   className="mt-2"
                 >
-                  {isExpanded ? "Read Less" : "Read More"}
+                  {isExpanded ? 'Read Less' : 'Read More'}
                 </Button>
               )}
             </Card.Text>
@@ -120,7 +149,7 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, disc, date, onU
           </>
         )}
       </Card.Body>
-    </Card>
+    </StyledCard>
   );
 });
 

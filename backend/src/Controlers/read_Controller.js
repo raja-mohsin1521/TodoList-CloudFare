@@ -1,3 +1,5 @@
+// src/Controlers/read_Controller.js
+
 export async function handleReadAll(request, env) {
     let cursor;
     const allKeys = [];
@@ -12,11 +14,11 @@ export async function handleReadAll(request, env) {
         const values = await Promise.all(
             allKeys.map(async (key) => {
                 try {
-                    const value = await env.NOTES.get(key.name);
-                    return { key: key.name, value: JSON.parse(value) };
+                    const note = JSON.parse(await env.NOTES.get(key.name));
+                    const imageUrl = `${note.imageUrl}`;
+                    return { id: key.name, note: { ...note, imageUrl } };
                 } catch (e) {
-                    console.error(`Error parsing value for key ${key.name}:`, e);
-                    return { key: key.name, value: null };
+                    return { id: key.name, note: null };
                 }
             })
         );
@@ -25,7 +27,6 @@ export async function handleReadAll(request, env) {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (e) {
-        console.error('Error in handleReadAll:', e);
-        return new Response(`Internal Server Error`+e, { status: 500 });
+        return new Response(`Internal Server Error: ${e.message}`, { status: 500 });
     }
 }
