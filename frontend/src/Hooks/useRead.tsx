@@ -27,11 +27,11 @@ export function useRead() {
         imageUrl: note.imageUrl,
         message: note.message,
         title: note.title,
-        date: note.date, // Added date to the formatted notes
+        date: note.date, 
       }));
 
       console.log(formattedNotes);
-      setData(formattedNotes); // Set the filtered and formatted notes to the state
+      setData(formattedNotes); 
       setError('');
     } catch (err) {
       console.error('Error fetching notes:', err);

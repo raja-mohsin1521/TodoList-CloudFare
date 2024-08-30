@@ -124,7 +124,7 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, message, date, 
           <>
             <Card.Title className="mb-2">{formData.title || 'Untitled'}</Card.Title>
             <Card.Subtitle className="mb-3 text-muted">
-              {formData.date || 'No date'}
+            {formData.date ? formData.date.split('T')[0] : 'No date'}
             </Card.Subtitle>
             <Card.Text className="mb-3">
               {isExpanded ? formData.message : manageDescLength}
