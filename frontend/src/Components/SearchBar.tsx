@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Note } from './NotesContainer';
+import {Note } from '../Hooks/useRead';
 
 interface SearchBarProps {
   data: Note[];

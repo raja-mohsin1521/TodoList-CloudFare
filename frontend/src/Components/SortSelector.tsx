@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import { Note } from "./NotesContainer";
+import { Note } from "../Hooks/useRead";
 
 
 interface SortSelectorProps {
