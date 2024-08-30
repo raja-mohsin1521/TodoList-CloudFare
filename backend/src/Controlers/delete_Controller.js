@@ -27,10 +27,22 @@ export async function handleDelete(request, env) {
         if (imagePath) {
             // Construct the image key
             const imageKey = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
+            console.log('Deleting image with key:', imageKey);
 
-            // Delete the image from R2
-            await env.R2_BUCKET.delete(imageKey);
-            console.log('Deleted image from R2 with key:', imageKey);
+            // Check if R2_BUCKET is defined
+            if (!env.R2_BUCKET) {
+                throw new Error('R2_BUCKET binding is not defined');
+            }
+
+            // Attempt to delete the image from R2
+            const deleteResult = await env.R2_BUCKET.delete(imageKey);
+            if (deleteResult === true) {
+                console.log('Successfully deleted image from R2 with key:', imageKey);
+            } else {
+                console.error('Failed to delete image from R2 with key:', imageKey);
+            }
+        } else {
+            console.log('No image URL found for the note.');
         }
 
         // Delete the note from the KV store
