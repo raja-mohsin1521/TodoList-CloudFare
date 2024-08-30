@@ -45,7 +45,7 @@ const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, message, date, 
   const [formData, setFormData] = useState({
     title: title || '',
     message: message || '',
-    date: new Date().toISOString() || '',
+    date: date || '',
     imageUrl: imageUrl || '',
   });
   const showAlert = useAlertStore(state => state.showAlert);
