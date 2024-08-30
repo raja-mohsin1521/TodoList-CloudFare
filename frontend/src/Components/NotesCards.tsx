@@ -32,7 +32,7 @@ const StyledCard = styled.div<{ imageurl: string }>`
     background-image: url(${props => props.imageurl ? `https://pub-af18b9cede00452d9b653b4c02e4a224.r2.dev/${props.imageurl}` : noImg});
     background-size: cover;
     background-position: center;
-    opacity: 0.6;
+    opacity: 0.3;
     z-index: -1;
     border-radius: 0.25rem;
   }
@@ -41,10 +41,11 @@ const StyledCard = styled.div<{ imageurl: string }>`
 const NotesCards: React.FC<NoteProps> = React.memo(({ id, title, message, date, imageUrl, onUpdate }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
   const [formData, setFormData] = useState({
     title: title || '',
     message: message || '',
-    date: date || '',
+    date: new Date().toISOString() || '',
     imageUrl: imageUrl || '',
   });
   const showAlert = useAlertStore(state => state.showAlert);
